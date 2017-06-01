@@ -1,0 +1,160 @@
+﻿@model IEnumerable<CRNGroupApp.Data.ShoppingListItem>
+
+
+
+
+<h2>@ViewBag.ListTitle Shopping List</h2>
+@{
+    WebImage photo = null;
+    var newFileName = "";
+    var imagePath = "";
+    var imageThumbPath = "";
+
+    if (IsPost)
+    {
+        photo = WebImage.GetImageFromRequest();
+        if (photo != null)
+        {
+            newFileName = Guid.NewGuid().ToString() + "_" +
+                Path.GetFileName(photo.FileName);
+            imagePath = @"\img\" + newFileName;
+            photo.Save(@"~\" + imagePath);
+
+            imageThumbPath = @"\img\thumbs\" + newFileName;
+            photo.Resize(width: 60, height: 60, preserveAspectRatio: true,
+               preventEnlarge: true);
+            photo.Save(@"~\" + imageThumbPath);
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resizing Image</title>
+</head>
+<body>
+    <h1>Thumbnail Image</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <legend> Creating Thumbnail Image </legend>
+            <label for="Image">Image</label>
+            <input type="file" name="Image" />
+            <br />
+            <input type="submit" value="Submit" />
+        </fieldset>
+    </form>
+    @if (imagePath != "")
+    {
+        <div class="result">
+            <img src="@imageThumbPath" alt="Thumbnail image" />
+            <a href="@Html.AttributeEncode(imagePath)" target="_Self">
+                View full size
+            </a>
+        </div>
+
+    }
+</body>
+</html><p>
+
+    @Html.ActionLink("Add Item", "CreateItem", new { id = ViewBag.ShoppingListId })
+</p>
+<table class="table">
+    <tr>
+
+        @*<th>
+                @Html.DisplayNameFor(model => model.ShoppingList.Name)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.IsChecked)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Priority)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.CreatedUtc)
+            </th>*@
+        @*<th>
+                @Html.DisplayNameFor(model => model.ModifiedUtc)
+            </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.ShoppingList.Name)
+                </td>*@
+            <td>
+                @Html.CheckBoxFor(modelItem => item.IsChecked, new { id = item.ShoppingListItemId, @class = "itemCheckBoxes" })
+
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.CreatedUtc)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.ModifiedUtc)
+                </td>*@
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id=item.ShoppingListItemId }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.ShoppingListItemId }) |*@
+                @Html.ActionLink("Delete", "Delete", "ShoppingListItem", new { id = item.ShoppingListItemId }, new { @class = "btn btn-default" })
+                @*@Html.ActionLink("Delete Checked", "Delete Checked", "ShoppingListItem", new { id = item.IsChecked }, new { @class = "btn btn-default" })*@
+              
+
+            </td>
+        </tr>
+    }
+
+</table>
+<div>
+    @Html.ActionLink("Your Shopping Lists", "Index")
+</div>
+@section scripts {
+    <script language="javascript" text="text/javascript">
+        $(document)
+            .ready(function () {
+                $("input.itemCheckBoxes") //css selector to find elements in page
+                    .css({ "cursor": "pointer" })
+                    .click(function (e) {
+                        var target = $(e.target);
+                        var shoppingListItemId = target.attr("id");
+
+                        $.ajax({
+                            method: "POST",
+                            url: "/shoppinglist/updatecheckbox",
+                            data: {
+                                ShoppingListItemId: shoppingListItemId,
+                                IsChecked: target.is(":checked")
+                            }
+                        })
+                            .done(function (r) {
+                                console.log("finished setting IsChecked - " + r);
+                            })
+                            .fail(function (r) {
+                                alert("Failed to change status");
+                            });
+
+
+                    });
+            });
+
+    </script>
+}
