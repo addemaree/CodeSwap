@@ -54,10 +54,20 @@
 
     }
 </body>
-</html><p>
+</html>
+<p>
 
     @Html.ActionLink("Add Item", "CreateItem", new { id = ViewBag.ShoppingListId })
 </p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Title: @Html.TextBox("SearchString") <br />
+        <input type="submit" value="Filter" />
+    </p>
+}
+ 
 <table class="table">
     <tr>
 
