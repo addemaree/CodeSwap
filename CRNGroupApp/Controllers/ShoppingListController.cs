@@ -85,7 +85,7 @@ namespace CRNGroupApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ShoppingListItem shoppingListItem = db.ShoppingListItems.Include(s => s.Files).SingleOrDefault(s => s.ShoppingListId == id);
+            ShoppingListItem shoppingListItem = db.ShoppingListItems.Include(s => s.Files).SingleOrDefault(s => s.ShoppingListItemId == id);
             Data.ShoppingList shoppingListModel = db.ShoppingLists.Find(id);
             if (shoppingListModel == null)
             {
@@ -106,7 +106,6 @@ namespace CRNGroupApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
 
             ViewBag.ShoppingListId = id;
             ViewBag.ListTitle = db.ShoppingLists.Find(id).Name;
