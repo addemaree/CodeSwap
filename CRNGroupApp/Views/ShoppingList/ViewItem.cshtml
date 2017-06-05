@@ -1,9 +1,6 @@
 ﻿@model IEnumerable<CRNGroupApp.Data.ShoppingListItem>
 
-
-
-
-<h2>@ViewBag.ListTitle Shopping List</h2>
+@*<h2>@ViewBag.ListTitle Shopping List</h2>
 @{
     WebImage photo = null;
     var newFileName = "";
@@ -54,7 +51,7 @@
 
     }
 </body>
-</html>
+</html>*@
 <p>
 
     @Html.ActionLink("Add Item", "CreateItem", new { id = ViewBag.ShoppingListId })
@@ -67,9 +64,9 @@
         <input type="submit" value="Filter" />
     </p>
 }
- 
-<table class="table">
-    <tr>
+
+    <table class="table">
+        <tr>
 
         @*<th>
                 @Html.DisplayNameFor(model => model.ShoppingList.Name)
@@ -86,6 +83,9 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Files)
         </th>
         @*<th>
                 @Html.DisplayNameFor(model => model.CreatedUtc)
@@ -116,6 +116,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Note)
             </td>
+            <td>
+                @Url.Content
+            </td>
+    
             @*<td>
                     @Html.DisplayFor(modelItem => item.CreatedUtc)
                 </td>*@
@@ -131,9 +135,9 @@
 
             </td>
         </tr>
-    }
+    }  
+    </table>
 
-</table>
 <div>
     @Html.ActionLink("Your Shopping Lists", "Index")
 </div>

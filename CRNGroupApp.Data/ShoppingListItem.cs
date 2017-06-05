@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,5 +38,6 @@ namespace CRNGroupApp.Data
         }
 
         public virtual ShoppingList ShoppingList { get; set; }
+        public virtual ICollection<File> Files { get; set; }
     }
 }
